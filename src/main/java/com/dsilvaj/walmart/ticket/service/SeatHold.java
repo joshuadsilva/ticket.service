@@ -22,6 +22,10 @@ public class SeatHold extends AbstractExpirable {
 		}
 	}
 	
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+	
 	public Set<Seat> getHeldSeats() {
 		return heldSeats;
 	}
