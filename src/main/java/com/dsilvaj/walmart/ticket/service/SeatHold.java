@@ -21,13 +21,17 @@ public class SeatHold extends AbstractExpirable {
 			seat.hold(heldAt, expiresAt);
 		}
 	}
+	
+	public Set<Seat> getHeldSeats() {
+		return heldSeats;
+	}
 
 	public int getSeatHoldId() {
 		return seatHoldId;
 	}
 
 	public Reservation getReservation() {
-		return getReservation();
+		return reservation;
 	}
 
 	public boolean isReserved() {

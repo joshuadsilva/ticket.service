@@ -25,7 +25,7 @@ public class SeatRow {
 	}
 	
 	public long getRemainingCapacity() {
-		return seats.stream().filter(s -> !s.isReserved() || s.hasNotExpired()).count();
+		return seats.stream().filter(s -> !s.isReserved() && !s.hasNotExpired()).count();
 	}
 	
 	public List<SeatBlock> getAvailableSeatBlocks() {

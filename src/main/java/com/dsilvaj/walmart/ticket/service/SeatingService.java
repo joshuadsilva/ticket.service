@@ -10,27 +10,28 @@ import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 
-public class Stadium {
+public class SeatingService {
 	private static final String ROWLABEL = "R%s ";
 	private static final String SPACE = " ";
 	private static final String NEWLINE = "\n";
+	private final String RESERVATION_FORMAT = "seatHoldId:%s confirmationCode:%s seats(%s):%s";
 	private int cnt = 0;
 	private List<SeatRow> rows;
 	private List<SeatHold> holds = new ArrayList<>();
 	private int holdTimeout = 0;
 	private int seatsPerRow;
 
-	public Stadium() {
+	public SeatingService() {
 		this(9, 33, 10);
 	}
 
-	public Stadium(int holdTimeout, int seatsPerRow) {
+	public SeatingService(int holdTimeout, int seatsPerRow) {
 		this.rows = new ArrayList<>();
 		this.holdTimeout = holdTimeout;
 		this.seatsPerRow = seatsPerRow;
 	}
 
-	public Stadium(int numberOfRows, int seatsPerRow, int holdTimeout) {
+	public SeatingService(int numberOfRows, int seatsPerRow, int holdTimeout) {
 		this(holdTimeout, seatsPerRow);
 		for (int r = 0; r < numberOfRows; r++) {
 			rows.add(new SeatRow(seatsPerRow, r));
@@ -43,6 +44,16 @@ public class Stadium {
 
 	public int getHoldTimeout() {
 		return holdTimeout;
+	}
+	
+	public void printReservations() {
+		StringBuilder sb = new StringBuilder();
+		holds.stream().filter(h -> h.getReservation() != null)
+				.forEach(h -> sb
+						.append(String.format(RESERVATION_FORMAT, h.getSeatHoldId(),
+								h.getReservation().getReservationCode(), h.getHeldSeats().size(), SeatingService.getSeatNumbers(h.getHeldSeats())))
+						.append(NEWLINE));
+		System.out.println(sb.toString());
 	}
 
 	public void printMap() {
@@ -62,7 +73,7 @@ public class Stadium {
 		return getTotalNumberOfSeats() - getNumberOfHeldOrReservedSeats();
 	}
 
-	public synchronized int getNumberOfHeldOrReservedSeats() {
+	public int getNumberOfHeldOrReservedSeats() {
 		return holds.stream().filter(hold -> hold.isReserved() || hold.hasNotExpired())
 				.mapToInt(hold -> hold.getNumberOfHeldOrReservedSeats()).sum();
 	}
@@ -87,6 +98,7 @@ public class Stadium {
 				throw new RuntimeException("This block of seats has already been reserved.");
 			}
 			if (seatHold.hasNotExpired()) {
+				//TODO: charge customer
 				String reservationCode = seatHold.reserve();
 				printMap();
 				return reservationCode;
@@ -97,7 +109,7 @@ public class Stadium {
 		throw new RuntimeException("No hold found, you need to start over");
 	}
 
-	protected String getSeatNumbers(Set<Seat> heldSeats) {
+	public static String getSeatNumbers(Set<Seat> heldSeats) {
 		StringBuilder sb = new StringBuilder();
 		heldSeats.stream().forEach(seat -> sb.append(seat.getNumber()));
 		return sb.toString();
@@ -112,6 +124,7 @@ public class Stadium {
 		SeatHold hold = new SeatHold(++cnt, customerEmail, DateTime.now(), DateTime.now().plusSeconds(holdTimeout),
 				heldSeats);
 		addHold(hold);
+		
 		printMap();
 		return hold;
 	}
