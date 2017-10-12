@@ -1,5 +1,7 @@
 package com.dsilvaj.walmart.ticket.service;
 
+import com.dsilvaj.walmart.ticket.domain.SeatHold;
+
 public interface TicketService {
 	/**
 	 * The number of seats in the venue that are neither held nor reserved
@@ -18,7 +20,7 @@ public interface TicketService {
 	 * @return a SeatHold object identifying the specific seats and related
 	 *         information
 	 */
-	AbstractExpirable findAndHoldSeats(int numSeats, String customerEmail);
+	SeatHold findAndHoldSeats(int numSeats, String customerEmail);
 
 	/**
 	 * Commit seats held for a specific customer

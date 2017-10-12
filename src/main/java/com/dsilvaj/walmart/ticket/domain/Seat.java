@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.walmart.ticket.domain;
 
 import java.util.Optional;
 
@@ -61,6 +61,6 @@ public class Seat extends AbstractExpirable implements Comparable<Seat> {
 	}
 
 	public String getNumber() {
-		return "R" + rowNumber + "-" + seatNumber + ", ";
+		return "R" + rowNumber + ":" + seatNumber + ", ";
 	}
 }

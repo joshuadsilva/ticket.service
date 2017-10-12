@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.walmart.ticket.domain;
 
 import java.util.UUID;
 

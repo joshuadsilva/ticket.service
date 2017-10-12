@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.walmart.ticket.domain;
 
 import static org.junit.Assert.*;
 
@@ -8,11 +8,15 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import com.dsilvaj.walmart.ticket.domain.Seat;
+import com.dsilvaj.walmart.ticket.domain.SeatBlock;
+import com.dsilvaj.walmart.ticket.domain.SeatRow;
+
 public class SeatRowTest {
 
 	@Test
 	public void testGetAvailableSeatBlockNoneHeldOrReserved() {
-		System.out.println("testGetAvailableSeatBlockNoneHeldOrReserved");
+		System.out.println("--> testGetAvailableSeatBlockNoneHeldOrReserved");
 		SeatRow row = new SeatRow(15, 1);
 		List<SeatBlock> blocks = row.getAvailableSeatBlocks();
 		assertEquals("1 block of available seats when none are taken", 1, blocks.size());
@@ -24,7 +28,7 @@ public class SeatRowTest {
 	
 	@Test
 	public void testGetAvailableSeatBlockLeftTaken() {
-		System.out.println("testGetAvailableSeatBlockLeftTaken");
+		System.out.println("--> testGetAvailableSeatBlockLeftTaken");
 		SeatRow row = new SeatRow(15, 1);
 		setSeatsReserved(row.getSeats(), Arrays.asList(0,1,2));
 		List<SeatBlock> blocks = row.getAvailableSeatBlocks();
@@ -37,7 +41,7 @@ public class SeatRowTest {
 	
 	@Test
 	public void testGetAvailableSeatBlockRightTaken() {
-		System.out.println("testGetAvailableSeatBlockRightTaken");
+		System.out.println("--> testGetAvailableSeatBlockRightTaken");
 		SeatRow row = new SeatRow(15, 1);
 		setSeatsReserved(row.getSeats(), Arrays.asList(13,14));
 		List<SeatBlock> blocks = row.getAvailableSeatBlocks();
@@ -50,7 +54,7 @@ public class SeatRowTest {
 	
 	@Test
 	public void testGetAvailableSeatBlockMiddleTaken() {
-		System.out.println("testGetAvailableSeatBlockMiddleTaken");
+		System.out.println("--> testGetAvailableSeatBlockMiddleTaken");
 		SeatRow row = new SeatRow(15, 1);
 		setSeatsReserved(row.getSeats(), Arrays.asList(3,4,5,6));
 		List<SeatBlock> blocks = row.getAvailableSeatBlocks();
@@ -66,7 +70,7 @@ public class SeatRowTest {
 	
 	@Test
 	public void testGetAvailableSeatBlockTwoMiddleBlocksTaken() {
-		System.out.println("testGetAvailableSeatBlockTwoMiddleBlocksTaken");
+		System.out.println("--> testGetAvailableSeatBlockTwoMiddleBlocksTaken");
 		SeatRow row = new SeatRow(15, 1);
 		setSeatsReserved(row.getSeats(), Arrays.asList(3,4,5,6,9,10));
 		List<SeatBlock> blocks = row.getAvailableSeatBlocks();
