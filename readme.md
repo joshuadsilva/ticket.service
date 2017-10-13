@@ -1,15 +1,28 @@
 # Ticket Service
+A simple ticket service that facilitates the discovery, temporary hold, and final reservation of seats within a high-demand performance venue. The service offers 3 functions via the `TicketService` interface:
+
+- Find the number of seats available within the venue
+Note: available seats are seats that are neither held nor reserved.
+
+- Find and hold the best available seats on behalf of a customer
+Note: each ticket hold should expire within a set number of seconds.
+
+- Reserve and commit a specific group of held seats for a customer
+
+## Requirements
+The project requires Java 1.8 and Maven to be installed.
 
 ## Assumptions
 - No physical storage, REST API or front end GUI has been implemented
-- All seat assignments/reservations are held in memory, but should be pushed into a  cache to allow services to scale out
-- Seat map defaults to 9 rows with 33 seats per row and a 60s hold time out unless instantiated using constructor below:
+- All seat assignments/reservations are held in memory for now, but should be pushed into a cache backed by a persistent store to allow services to scale out
+- Seat map defaults to 9 rows with 33 seats per row and a 60s hold time out unless instantiated using the constructor below:
 ```java
 public TicketServiceImpl(int numberOfRows, int seatsPerRow, int holdTimeout)
 ```
 
 The order of ticket block assignments is as follows:
 - All seats in a single row as close to the stage/front as possible
+- If the entire row is open, seats will be held as close to the center for best viewing angle, else the seats will be held in the first available open block from the left edge when facing the stage
 - seats in blocks that have the highest contiguity (overlap/grouping) factor and span multiple rows
 
 ## Instructions to build

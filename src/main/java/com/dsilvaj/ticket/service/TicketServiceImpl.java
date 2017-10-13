@@ -16,10 +16,18 @@ public class TicketServiceImpl implements TicketService {
 		service.init(numberOfRows, seatsPerRow, holdTimeout);
 	}
 
+	/**
+	 * @see {@link TicketService#numSeatsAvailable()}
+	 */
+	@Override
 	public int numSeatsAvailable() {
 		return service.numSeatsAvailable();
 	}
 
+	/**
+	 * @see {@link TicketService#findAndHoldSeats(int, String)}
+	 */
+	@Override
 	public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
 		lock.lock();
 		SeatHold hold = null;
@@ -34,6 +42,10 @@ public class TicketServiceImpl implements TicketService {
 		return hold;
 	}
 
+	/**
+	 * @see {@link TicketService#reserveSeats(int, String)}
+	 */
+	@Override
 	public String reserveSeats(int seatHoldId, String customerEmail) {
 		return service.reserveSeats(seatHoldId, customerEmail);
 	}
