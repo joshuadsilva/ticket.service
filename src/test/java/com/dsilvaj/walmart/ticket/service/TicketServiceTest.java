@@ -8,10 +8,8 @@ import java.util.Arrays;
 import java.util.OptionalInt;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -33,7 +31,7 @@ public class TicketServiceTest {
 	public void testNotEnoughSeatsAvailable() {
 		System.out.println("--> testNotEnoughSeatsAvailable");
 		service = new TicketServiceImpl(9, 30, 4);
-		service.findAndHoldSeats(1123, EMAIL_JOHN);
+		hold(1123, EMAIL_JOHN);
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -48,17 +46,21 @@ public class TicketServiceTest {
 		System.out.println("--> testHoldReducesAvailableSeats");
 		service = new TicketServiceImpl(10, 20, 2);
 		assertEquals("200 seats should be available", 200, service.numSeatsAvailable());
-		SeatHold hold = service.findAndHoldSeats(10, EMAIL_JOHN);
+		SeatHold hold = hold(10, EMAIL_JOHN);
 		assertEquals("190 seats should be available", 190, service.numSeatsAvailable());
 		assertEquals("10 seats should be held", 10, hold.getHeldSeats().size());
-		while (hold.hasNotExpired()) {
-
-		}
+		waitUntilExpiration(hold);
 		assertEquals("200 seats should be available when hold expires", 200, service.numSeatsAvailable());
 	}
 
+	/**
+	 * Test a combination of holds with and without expiration, with and without reservation
+	 * to validate the best seats are discovered.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void testHoldAndReservation() throws Exception {
+	public void testHoldAndReservation() {
 		System.out.println("--> testHoldAndReservation");
 		service = new TicketServiceImpl(5, 15, 2);
 
@@ -122,6 +124,13 @@ public class TicketServiceTest {
 		holdAndReserve(12, EMAIL_JOHN);
 	}
 	
+	/**
+	 * Attempt to make 30 reservation requests with a random number of seats 
+	 * between 1 and 15 per request for a venue with 20 rows having 10 seats
+	 * per row. This test uses a fixed thread pool of size 2 to simulate concurrency 
+	 * of requests. The expectation is that no seat will have been held or reserved
+	 * on more than one request.
+	 */
 	@Test
 	public void concurrencyTest() {
 		System.out.println("--> concurrencyTest");
@@ -135,7 +144,7 @@ public class TicketServiceTest {
 				return holdAndReserve(nbr, "foo@bar.com");
 			};
 			
-			Future<SeatHold> holdFuture = executorService.submit(callableReserveTask);
+			executorService.submit(callableReserveTask);
 		});
 		executorService.shutdown();
 		try {
