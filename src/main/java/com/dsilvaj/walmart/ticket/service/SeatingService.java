@@ -61,6 +61,7 @@ public class SeatingService {
 	}
 
 	protected void init(int numberOfRows, int seatsPerRow, int holdTimeout) {
+		cnt = 0;
 		this.holds = new ArrayList<>();
 		this.rows = new ArrayList<>();
 		this.holdTimeout = holdTimeout;
@@ -215,13 +216,13 @@ public class SeatingService {
 	 * @return a {@link SeatHold} object identifying specific seats and related information
 	 */
 	public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
-		if (debug) System.out.println("findAndHoldSeats:" + numSeats + " email:" + customerEmail);
+		if (debug) System.out.println("findAndHoldSeats:" + numSeats + " email:" + customerEmail + " seatHoldId:" + ++cnt);
 		if (numSeats > numSeatsAvailable()) {
 			if (debug) System.err.println(MSG_NOT_ENOUGH_SEATS);
 			throw new RuntimeException(MSG_NOT_ENOUGH_SEATS);
 		}
 		Set<Seat> bestSeats = findBestSeats(numSeats, new LinkedHashSet<>());
-		SeatHold hold = new SeatHold(++cnt, customerEmail, DateTime.now(), DateTime.now().plusSeconds(holdTimeout),
+		SeatHold hold = new SeatHold(cnt, customerEmail, DateTime.now(), DateTime.now().plusSeconds(holdTimeout),
 				bestSeats);
 		addHold(hold);
 		if (debug) System.out.println(String.format(HOLD_LOG_FORMAT, hold.getSeatHoldId(), hold.getNumberOfHeldOrReservedSeats(), getSeatNumbers(hold.getHeldSeats())));
@@ -299,12 +300,10 @@ public class SeatingService {
 	 * @return an {@link Optional} object that contains the seats that are the best match
 	 */
 	private Optional<Set<Seat>> tryToAssignSeatsToMultipleContiguousRows(int numberOfSeats, int numberOfRowsToSpan) {
-		if (debug) System.out.println("tryToAssignSeatsToMultipleContiguousRows seats:" + numberOfSeats + " rowSpan:" + numberOfRowsToSpan);
 		Optional<MultiRowBlock> bestMultiRowBlock = findBestMultiRowBlock(numberOfSeats, numberOfRowsToSpan);
 		if (bestMultiRowBlock.isPresent()) {
 			return chooseSeatsInMultiBlock(numberOfSeats, bestMultiRowBlock.get());
 		}
-		System.err.println("No multiblock found. span:" + numberOfRowsToSpan);
 		return Optional.empty();
 	}
 	
@@ -316,7 +315,6 @@ public class SeatingService {
 	 * @return an {@link Optional} object that contains the seats that are the best match
 	 */
 	private Optional<Set<Seat>> chooseSeatsInMultiBlock(int numberOfSeats, MultiRowBlock multiBlock) {
-		if (debug) System.out.println("holdSeatsInMultiBlock " + multiBlock.toString());
 		List<SeatBlock> ordered = multiBlock.getBlocks().stream().sorted(new SeatBlock.RowNumberComparator()).collect(Collectors.toList());
 		Set<Seat> seats = new HashSet<>();
 		int idx = 0;

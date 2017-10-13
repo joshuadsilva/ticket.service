@@ -6,13 +6,22 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.OptionalInt;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 
 import com.dsilvaj.walmart.ticket.domain.SeatHold;
 
 public class TicketServiceTest {
+	private static final int MAX_SEATS_RESERVABLE = 15;
 	private static final String EMAIL_JOHN = "johndoe@foo.com";
 	private static final String EMAIL_JANE = "janedoe@foo.com";
 	private static final String EMAIL_BARB = "barbdoe@foo.com";
@@ -112,6 +121,32 @@ public class TicketServiceTest {
 		holdAndReserve(11, EMAIL_JOHN);
 		holdAndReserve(12, EMAIL_JOHN);
 	}
+	
+	@Test
+	public void concurrencyTest() {
+		System.out.println("--> concurrencyTest");
+		Random r = new Random();
+		service = new TicketServiceImpl(20, 10, 2);
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		
+		IntStream.range(0, 30).forEach(i -> {
+			Callable<SeatHold> callableReserveTask = () -> {
+				int nbr = r.nextInt(MAX_SEATS_RESERVABLE) + 1;
+				return holdAndReserve(nbr, "foo@bar.com");
+			};
+			
+			Future<SeatHold> holdFuture = executorService.submit(callableReserveTask);
+		});
+		executorService.shutdown();
+		try {
+		    if (!executorService.awaitTermination(15, TimeUnit.SECONDS)) {
+		        executorService.shutdownNow();
+		    } 
+		} catch (InterruptedException e) {
+		    executorService.shutdownNow();
+		} 
+		
+	}
 
 	private SeatHold hold(int numberOfSeats, String email) {
 		return service.findAndHoldSeats(numberOfSeats, email);
@@ -131,7 +166,9 @@ public class TicketServiceTest {
 
 	private SeatHold holdAndReserve(int numberOfSeats, String email) {
 		SeatHold hold = service.findAndHoldSeats(numberOfSeats, email);
-		service.reserveSeats(hold.getSeatHoldId(), email);
+		if (hold.getNumberOfHeldOrReservedSeats() > 0) {
+			service.reserveSeats(hold.getSeatHoldId(), email);
+		}
 		return hold;
 	}
 

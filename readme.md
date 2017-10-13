@@ -3,7 +3,6 @@
 ## Assumptions
 - No physical storage, REST API or front end GUI has been implemented
 - All seat assignments/reservations are held in memory, but should be pushed into a  cache to allow services to scale out
-- Distributed mutex for concurrency using a cache has not been implemented, `TODO:` markers indicate where it should be implemented
 - Seat map defaults to 9 rows with 33 seats per row and a 10s hold time out unless instantiated using constructor below:
 ```java
 public TicketServiceImpl(int numberOfRows, int seatsPerRow, int holdTimeout) {

@@ -1,9 +1,11 @@
 package com.dsilvaj.walmart.ticket.service;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import com.dsilvaj.walmart.ticket.domain.SeatHold;
 
 public class TicketServiceImpl implements TicketService {
-
+	private ReentrantLock lock = new ReentrantLock();
 	private SeatingService service = SeatingService.getInstance();
 	
 	public TicketServiceImpl() {
@@ -19,9 +21,15 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
-		// TODO: get distributed mutex
-		SeatHold hold = service.findAndHoldSeats(numSeats, customerEmail);
-		// TODO: release distributed mutex
+		lock.lock();
+		SeatHold hold = null;
+		try {
+			hold = service.findAndHoldSeats(numSeats, customerEmail);
+		} catch (Exception e) {
+			throw(e);
+		} finally {
+			lock.unlock();
+		}
 		return hold;
 	}
 
