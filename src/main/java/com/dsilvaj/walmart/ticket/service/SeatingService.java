@@ -83,11 +83,11 @@ public class SeatingService {
 	/**
 	 * Write all the reservations to stdout 
 	 */
-	private void printReservations() {
+	protected void printReservations() {
 		StringBuilder sb = new StringBuilder();
 		holds.stream().filter(h -> h.getReservation() != null)
 				.forEach(h -> sb
-						.append(String.format(RESERVATION_FORMAT, h.getCustomerEmail() ,h.getSeatHoldId(),
+						.append(String.format(RESERVATION_FORMAT, h.getCustomerEmail(), h.getSeatHoldId(),
 								h.getHeldSeats().size(), SeatingService.getSeatNumbers(h.getHeldSeats()), h.getReservation().getReservationCode()))
 						.append(NEWLINE));
 		System.out.println(sb.toString());
@@ -155,6 +155,10 @@ public class SeatingService {
 	 */
 	public int getTotalNumberOfSeats() {
 		return rows.size() * seatsPerRow;
+	}
+	
+	public List<SeatHold> getHolds() {
+		return holds;
 	}
 
 	private void addHold(SeatHold hold) {

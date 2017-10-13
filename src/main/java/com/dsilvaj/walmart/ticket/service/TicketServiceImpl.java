@@ -26,6 +26,7 @@ public class TicketServiceImpl implements TicketService {
 		try {
 			hold = service.findAndHoldSeats(numSeats, customerEmail);
 		} catch (Exception e) {
+			System.err.println(e);
 			throw(e);
 		} finally {
 			lock.unlock();

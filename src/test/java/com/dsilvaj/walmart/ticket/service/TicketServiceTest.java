@@ -5,8 +5,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.OptionalInt;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,6 +19,7 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
+import com.dsilvaj.walmart.ticket.domain.Seat;
 import com.dsilvaj.walmart.ticket.domain.SeatHold;
 
 public class TicketServiceTest {
@@ -150,7 +154,17 @@ public class TicketServiceTest {
 		try {
 		    if (!executorService.awaitTermination(15, TimeUnit.SECONDS)) {
 		        executorService.shutdownNow();
-		    } 
+		    }
+		    System.out.println("Number of held seats:" + SeatingService.getInstance().getNumberOfHeldOrReservedSeats());
+		    
+		    SeatingService.getInstance().printReservations();
+		    List<SeatHold> holds = SeatingService.getInstance().getHolds();
+		    List<Seat> seats = holds.stream().map(SeatHold::getHeldSeats).flatMap(Set::stream).collect(Collectors.toList());
+		    Map<String, List<Seat>> groupedSeats = seats.stream().collect(Collectors.groupingBy(Seat::getNumber));
+		    
+		    // If concurrency isn't handled properly the same seat could be held on multiple SeatHold records and the distinct
+		    // held seat number count would be less than the actual number of held seats.
+		    assertEquals("Count of distinct held seat numbers equals number of seats held", groupedSeats.size(), SeatingService.getInstance().getNumberOfHeldOrReservedSeats());
 		} catch (InterruptedException e) {
 		    executorService.shutdownNow();
 		} 
