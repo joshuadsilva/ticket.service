@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.dsilvaj</groupId>
-	<artifactId>walmart.ticket.service</artifactId>
+	<artifactId>ticket.service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>walmart.ticket.service</name>
+	<name>ticket.service</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

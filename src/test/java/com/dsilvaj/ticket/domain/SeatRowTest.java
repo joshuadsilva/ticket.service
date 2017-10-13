@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.domain;
+package com.dsilvaj.ticket.domain;
 
 import static org.junit.Assert.*;
 
@@ -8,9 +8,9 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import com.dsilvaj.walmart.ticket.domain.Seat;
-import com.dsilvaj.walmart.ticket.domain.SeatBlock;
-import com.dsilvaj.walmart.ticket.domain.SeatRow;
+import com.dsilvaj.ticket.domain.Seat;
+import com.dsilvaj.ticket.domain.SeatBlock;
+import com.dsilvaj.ticket.domain.SeatRow;
 
 public class SeatRowTest {
 

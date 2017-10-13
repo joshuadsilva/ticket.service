@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.ticket.service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
-import com.dsilvaj.walmart.ticket.domain.MultiRowBlock;
-import com.dsilvaj.walmart.ticket.domain.Seat;
-import com.dsilvaj.walmart.ticket.domain.SeatBlock;
-import com.dsilvaj.walmart.ticket.domain.SeatHold;
-import com.dsilvaj.walmart.ticket.domain.SeatRow;
+import com.dsilvaj.ticket.domain.MultiRowBlock;
+import com.dsilvaj.ticket.domain.Seat;
+import com.dsilvaj.ticket.domain.SeatBlock;
+import com.dsilvaj.ticket.domain.SeatHold;
+import com.dsilvaj.ticket.domain.SeatRow;
 
 public class SeatingService {
 	private final boolean debug = true;
@@ -217,7 +217,7 @@ public class SeatingService {
 	/**
 	 * Find the best seats available. Highest preference is given to finding
 	 * seats in a single row, followed by seats in blocks that have the highest 
-	 * contiguity (overlap/grouping) factorthat span multiple rows.
+	 * contiguity (overlap/grouping) factor that span multiple rows.
 	 *  
 	 * @param numSeats - the number of seats to hold
 	 * @param customerEmail - the email of the customer

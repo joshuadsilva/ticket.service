@@ -1,10 +1,10 @@
-package com.dsilvaj.walmart.ticket.domain;
+package com.dsilvaj.ticket.domain;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.dsilvaj.walmart.ticket.domain.SeatBlock;
+import com.dsilvaj.ticket.domain.SeatBlock;
 
 public class SeatBlockTest {
 

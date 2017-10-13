@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.domain;
+package com.dsilvaj.ticket.domain;
 
 import java.util.ArrayList;
 import java.util.List;

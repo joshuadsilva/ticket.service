@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.ticket.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,8 +19,11 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import com.dsilvaj.walmart.ticket.domain.Seat;
-import com.dsilvaj.walmart.ticket.domain.SeatHold;
+import com.dsilvaj.ticket.domain.Seat;
+import com.dsilvaj.ticket.domain.SeatHold;
+import com.dsilvaj.ticket.service.SeatingService;
+import com.dsilvaj.ticket.service.TicketService;
+import com.dsilvaj.ticket.service.TicketServiceImpl;
 
 public class TicketServiceTest {
 	private static final int MAX_SEATS_RESERVABLE = 15;

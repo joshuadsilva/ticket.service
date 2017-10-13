@@ -1,6 +1,6 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.ticket.service;
 
-import com.dsilvaj.walmart.ticket.domain.SeatHold;
+import com.dsilvaj.ticket.domain.SeatHold;
 
 public interface TicketService {
 	/**

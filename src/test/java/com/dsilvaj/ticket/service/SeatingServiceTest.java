@@ -1,4 +1,4 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.ticket.service;
 
 import static org.junit.Assert.*;
 
@@ -8,9 +8,10 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.dsilvaj.walmart.ticket.domain.MultiRowBlock;
-import com.dsilvaj.walmart.ticket.domain.SeatBlock;
-import com.dsilvaj.walmart.ticket.domain.SeatRow;
+import com.dsilvaj.ticket.domain.MultiRowBlock;
+import com.dsilvaj.ticket.domain.SeatBlock;
+import com.dsilvaj.ticket.domain.SeatRow;
+import com.dsilvaj.ticket.service.SeatingService;
 
 public class SeatingServiceTest {
 

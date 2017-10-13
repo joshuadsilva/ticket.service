@@ -1,8 +1,8 @@
-package com.dsilvaj.walmart.ticket.service;
+package com.dsilvaj.ticket.service;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.dsilvaj.walmart.ticket.domain.SeatHold;
+import com.dsilvaj.ticket.domain.SeatHold;
 
 public class TicketServiceImpl implements TicketService {
 	private ReentrantLock lock = new ReentrantLock();
