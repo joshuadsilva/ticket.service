@@ -4,14 +4,14 @@ import com.dsilvaj.walmart.ticket.domain.SeatHold;
 
 public class TicketServiceImpl implements TicketService {
 
-	private SeatingService service = new SeatingService();
-
+	private SeatingService service = SeatingService.getInstance();
+	
 	public TicketServiceImpl() {
 
 	}
 
 	public TicketServiceImpl(int numberOfRows, int seatsPerRow, int holdTimeout) {
-		this.service = new SeatingService(numberOfRows, seatsPerRow, holdTimeout);
+		service.init(numberOfRows, seatsPerRow, holdTimeout);
 	}
 
 	public int numSeatsAvailable() {

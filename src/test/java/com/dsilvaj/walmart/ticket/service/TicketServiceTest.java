@@ -97,7 +97,9 @@ public class TicketServiceTest {
 
 	@Test
 	public void bigTest() {
+		System.out.println("--> bigTest");
 		service = new TicketServiceImpl(5, 15, 2);
+		assertEquals("75 seats in venue", 75, service.numSeatsAvailable());
 		holdAndReserve(5, EMAIL_JOHN);
 		SeatHold hold3 = hold(3, EMAIL_JOHN);
 		holdAndReserve(5, EMAIL_JOHN);
@@ -108,8 +110,7 @@ public class TicketServiceTest {
 		holdAndReserve(3, EMAIL_JOHN);
 		holdAndReserve(10, EMAIL_JOHN);
 		holdAndReserve(11, EMAIL_JOHN);
-		hold(12, EMAIL_JOHN);
-		System.out.println(service.numSeatsAvailable());
+		holdAndReserve(12, EMAIL_JOHN);
 	}
 
 	private SeatHold hold(int numberOfSeats, String email) {

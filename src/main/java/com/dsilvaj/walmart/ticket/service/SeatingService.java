@@ -19,7 +19,7 @@ import com.dsilvaj.walmart.ticket.domain.SeatRow;
 
 public class SeatingService {
 	private final boolean debug = true;
-	private final String MAP_HEADER = "            Map              row availableSeatBlocks";
+	private final String MAP_HEADER = "            Map                                            row availableSeatBlocks";
 	private final String MSG_NOT_ENOUGH_SEATS = "Not enough seats available";
 	private final String MSG_INVALID_HOLD_ID = "No hold found, you need to start over";
 	private final String MSG_HOLD_HAS_EXPIRED = "Your time has expired, you need to start over.";
@@ -35,8 +35,17 @@ public class SeatingService {
 	private List<SeatHold> holds = new ArrayList<>();
 	private int holdTimeout = 0;
 	private int seatsPerRow;
+	
+	private static SeatingService instance;
+	
+	public static SeatingService getInstance() {
+		if (instance == null) {
+			instance = new SeatingService();
+		}
+		return instance;
+	}
 
-	public SeatingService() {
+	private SeatingService() {
 		this(9, 33, 10);
 	}
 
@@ -47,7 +56,12 @@ public class SeatingService {
 	 * @param seatsPerRow - the number of seats in a row
 	 * @param holdTimeout - the time in seconds to hold a seat before it expires and is returned to the pool of available seats
 	 */
-	public SeatingService(int numberOfRows, int seatsPerRow, int holdTimeout) {
+	protected SeatingService(int numberOfRows, int seatsPerRow, int holdTimeout) {
+		init(numberOfRows, seatsPerRow, holdTimeout);
+	}
+
+	protected void init(int numberOfRows, int seatsPerRow, int holdTimeout) {
+		this.holds = new ArrayList<>();
 		this.rows = new ArrayList<>();
 		this.holdTimeout = holdTimeout;
 		this.seatsPerRow = seatsPerRow;
@@ -82,13 +96,13 @@ public class SeatingService {
 	 * 
 	 * e.g.,
 	 * <pre>
-	 *             Map              row availableSeatBlocks
-	 * ----------------------------------------------------
-	 * 1 1 1 1 0 0 0 6 6 . . . . . . R0 9-14
-	 * 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 R1 
-	 * 4 5 5 5 5 5 5 5 5 5 5 5 5 . . R2 13-14
-	 * . . . . . . . . . . . . . . . R3 0-14
-	 * . . . . . . . . . . . . . . . R4 0-14
+	 *             Map                                            row availableSeatBlocks
+	 * ----------------------------------------------------------------------------------
+	 *   1   1   1   1   0   0   0   6   6   .   .   .   .   .   . R0 9-14
+     *   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4 R1 
+     *   4   5   5   5   5   5   5   5   5   5   5   5   5   .   . R2 13-14
+     *   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . R3 0-14
+     *   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . R4 0-14
 	 * 
 	 * where 
 	 *  0 - held seats that have not yet expired
@@ -104,7 +118,7 @@ public class SeatingService {
 		sb.append(StringUtils.repeat("-", MAP_HEADER.length())).append(NEWLINE);
 		for (SeatRow r : rows) {
 			for (Seat seat : r.getSeats()) {
-				sb.append(seat.isReserved() || seat.hasNotExpired() ? seat.getSeatHoldId() : Seat.STATUS_EMPTY)
+				sb.append(String.format("%3s", seat.isReserved() || seat.hasNotExpired() ? seat.getSeatHoldId() : Seat.STATUS_EMPTY))
 						.append(SPACE);
 			}
 			List<String> blocks = r.getAvailableSeatBlocks().stream().map(b -> b.getStartSeatNumber() + "-" + b.getEndSeatNumber()).collect(Collectors.toList());
