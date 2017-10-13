@@ -69,22 +69,22 @@ public class TicketServiceTest {
 		assertEquals("4 seats are held for John", 4, hold.getHeldSeats().size());
 		assertEquals("Johns email is on the hold", EMAIL_JOHN, hold.getCustomerEmail());
 		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
-		assertTrue("Seats held are 0, 1, 2, 3", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(0, 1, 2, 3)));
+		assertTrue("Seats held are 5, 6, 7, 8", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(5, 6, 7, 8)));
 		assertNotNull("Reserved 4 seats for John", hold.getReservation().getReservationCode());
 
 		// Hold 8 for Jane, wait for them to expire
 		hold = hold(8, EMAIL_JANE);
 		assertEquals("8 seats are held for Jane", 8, hold.getHeldSeats().size());
 		assertEquals("Janes email is on the hold", EMAIL_JANE, hold.getCustomerEmail());
-		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
-		assertTrue("Seats held are 4, 5, 6, 7, 8, 9, 10, 11", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(4, 5, 6, 7, 8, 9, 10, 11)));
+		assertEquals("Seats held in row 1", OptionalInt.of(1), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
+		assertTrue("Seats held are 3, 4, 5, 6, 7, 8, 9, 10", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10)));
 		waitUntilExpiration(hold);
 
 		hold = hold(3, EMAIL_BARB);
 		assertEquals("3 seats are held for Jane", 3, hold.getHeldSeats().size());
 		assertEquals("Barbs email is on the hold", EMAIL_BARB, hold.getCustomerEmail());
 		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
-		assertTrue("Seats held are 4, 5, 6", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(4, 5, 6)));
+		assertTrue("Seats held are 0, 1, 2", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(0, 1, 2)));
 		
 		holdAndReserve(16, EMAIL_JOHN);
 		holdAndReserve(12, EMAIL_JOHN);
@@ -93,7 +93,7 @@ public class TicketServiceTest {
 		assertEquals("2 seats are held for Carl", 2, hold.getHeldSeats().size());
 		assertEquals("Carls email is on the hold", EMAIL_CARL, hold.getCustomerEmail());
 		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
-		assertTrue("Seats held are 7, 8", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(7, 8)));
+		assertTrue("Seats held are 3, 4", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(3, 4)));
 		
 		while (hold.hasNotExpired()) {
 
@@ -102,7 +102,7 @@ public class TicketServiceTest {
 		assertEquals("3 seats are held for Jack", 3, hold.getHeldSeats().size());
 		assertEquals("Jacks email is on the hold", EMAIL_JACK, hold.getCustomerEmail());
 		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
-		assertTrue("Seats held are 4, 5, 6", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(4, 5, 6)));
+		assertTrue("Seats held are 0, 1, 2", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(0, 1, 2)));
 		
 	}
 
@@ -171,6 +171,7 @@ public class TicketServiceTest {
 		while (hold.hasNotExpired()) {
 
 		}
+		System.out.println("Time expired, seatHoldId:" + hold.getSeatHoldId());
 	}
 
 	private SeatHold holdAndReserve(int numberOfSeats, String email) {

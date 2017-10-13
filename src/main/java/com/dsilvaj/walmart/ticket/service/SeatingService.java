@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -284,13 +285,14 @@ public class SeatingService {
 				continue;
 			}
 			SeatBlock bestblock = blocks.get(0);
-			Set<Seat> seats = new HashSet<>();
 			int start = bestblock.getStartSeatNumber();
-			int stop = start + numberOfSeats - 1;
-			for (int s=start; s<=stop; s++) {
-				Seat seat = row.getSeats().get(s);
-				seats.add(seat);
+			// if all seats in the row are available hold the center seats
+			if (bestblock.getNumberOfSeats() == seatsPerRow) {
+				start = seatsPerRow/2 - numberOfSeats/2;
 			}
+			int stop = start + numberOfSeats - 1;
+			Set<Seat> seats = new HashSet<>();
+			IntStream.range(start, stop + 1).forEach(s -> seats.add(row.getSeats().get(s))); 
 			return Optional.of(seats);
 		}
 		return Optional.empty();

@@ -2,7 +2,6 @@ package com.dsilvaj.walmart.ticket.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MultiRowBlock {
 
@@ -34,7 +33,4 @@ public class MultiRowBlock {
 		return this.groupFactor > other.getGroupFactor();
 	}
 	
-	public String toString() {
-		return "groupFactor:" + groupFactor + " " + String.join(" ", blocks.stream().map(b -> b.toString()).collect(Collectors.toList()));
-	}
 }
