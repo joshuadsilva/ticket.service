@@ -22,7 +22,7 @@ public TicketServiceImpl(int numberOfRows, int seatsPerRow, int holdTimeout)
 
 The order of ticket block assignments is as follows:
 - All seats in a single row as close to the stage/front as possible
-- If the entire row is open, seats will be held as close to the center for best viewing angle, else the seats will be held in the first available open block from the left edge when facing the stage
+- the seats will be held in the first available open block from the left edge when facing the stage
 - seats in blocks that have the highest contiguity (overlap/grouping) factor and span multiple rows
 
 ## Instructions to build

@@ -101,10 +101,8 @@ public class TicketServiceTest {
 		assertEquals("Carls email is on the hold", EMAIL_CARL, hold.getCustomerEmail());
 		assertEquals("Seats held in row 0", OptionalInt.of(0), hold.getHeldSeats().stream().mapToInt(s -> s.getRowNumber()).findFirst());
 		assertTrue("Seats held are 3, 4", hold.getHeldSeats().stream().map(s -> s.getSeatNumber()).collect(Collectors.toSet()).containsAll(Arrays.asList(3, 4)));
+		waitUntilExpiration(hold);
 		
-		while (hold.hasNotExpired()) {
-
-		}
 		hold = holdAndReserve(3, EMAIL_JACK);
 		assertEquals("3 seats are held for Jack", 3, hold.getHeldSeats().size());
 		assertEquals("Jacks email is on the hold", EMAIL_JACK, hold.getCustomerEmail());
@@ -114,7 +112,7 @@ public class TicketServiceTest {
 	}
 
 	@Test
-	public void bigTest() {
+	public void testMultiRowReservations() {
 		System.out.println("--> bigTest");
 		service = new TicketServiceImpl(5, 15, 2);
 		assertEquals("75 seats in venue", 75, service.numSeatsAvailable());
@@ -129,6 +127,7 @@ public class TicketServiceTest {
 		holdAndReserve(10, EMAIL_JOHN);
 		holdAndReserve(11, EMAIL_JOHN);
 		holdAndReserve(12, EMAIL_JOHN);
+		//TODO: add assertions
 	}
 	
 	/**

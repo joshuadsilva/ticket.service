@@ -290,10 +290,13 @@ public class SeatingService {
 			}
 			SeatBlock bestblock = blocks.get(0);
 			int start = bestblock.getStartSeatNumber();
+			
+			/* This isn't working out as well as I hoped, and is leaving a lot of seats empty along the sides */
 			// if all seats in the row are available hold the center seats
-			if (bestblock.getNumberOfSeats() == seatsPerRow) {
-				start = seatsPerRow/2 - numberOfSeats/2;
-			}
+//			if (bestblock.getNumberOfSeats() == seatsPerRow) {
+//				start = seatsPerRow/2 - numberOfSeats/2;
+//			}
+			
 			int stop = start + numberOfSeats - 1;
 			Set<Seat> seats = new HashSet<>();
 			IntStream.range(start, stop + 1).forEach(s -> seats.add(row.getSeats().get(s))); 
