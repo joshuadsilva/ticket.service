@@ -1,6 +1,7 @@
 package com.dsilvaj.ticket.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.joda.time.DateTime;
 
 import com.dsilvaj.ticket.domain.MultiRowBlock;
@@ -209,8 +211,17 @@ public class SeatingService {
 	 * @return a string of formatted seat numbers
 	 */
 	public static String getSeatNumbers(Set<Seat> heldSeats) {
+		Comparator<Seat> seatNumberComparator = new Comparator<Seat>() {
+			@Override
+			public int compare(Seat o1, Seat o2) {
+				return new CompareToBuilder()
+						.append(o1.getRowNumber(), o2.getRowNumber())
+						.append(o1.getSeatNumber(), o2.getSeatNumber())
+						.toComparison();
+			}
+		};
 		StringBuilder sb = new StringBuilder();
-		heldSeats.stream().sorted().forEach(seat -> sb.append(seat.getNumber()));
+		heldSeats.stream().sorted(seatNumberComparator).map(Seat::getNumber).forEach(s-> sb.append(s));
 		return sb.toString();
 	}
 
